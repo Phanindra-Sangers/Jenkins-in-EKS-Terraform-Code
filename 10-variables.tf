@@ -1,6 +1,6 @@
 variable "region" {
   description = "Region"
-  default     = "ap-south-1"
+  default     = "eu-central-1"
   type        = string
 }
 
