@@ -33,6 +33,8 @@ module "eks" {
       most_recent = true
     }
 
+    eks
+
   }
 
   cluster_security_group_additional_rules = {
@@ -45,14 +47,14 @@ module "eks" {
       source_node_security_group = true
     }
     within_vpc = {
-      description                = "within_vpc"
-      protocol                   = "-1"
-      from_port                  = 0
-      to_port                    = 0
-      type                       = "ingress"
-      cidr_blocks         = [module.vpc.vpc_cidr_block]
+      description = "within_vpc"
+      protocol    = "-1"
+      from_port   = 0
+      to_port     = 0
+      type        = "ingress"
+      cidr_blocks = [module.vpc.vpc_cidr_block]
     }
-    
+
   }
 
 

@@ -1,26 +1,26 @@
 resource "helm_release" "jenkins" {
-
-  count      = var.enable_jenkins   ? 1 : 0
-  name       = var.jenkins_name
-  namespace  = try(kubernetes_namespace_v1.jenkins[0].metadata[0].name, local.jenkins_namespace)
-  create_namespace = false  
-  chart      = var.jenkins_name
-  version    = var.jenkins_chart_version
-  repository = "https://charts.jenkins.io"
-  values = ["${file("${path.module}/helm-values/jenkins-values.yaml")}"]
+  depends_on       = [module.eks]
+  count            = var.enable_jenkins ? 1 : 0
+  name             = var.jenkins_name
+  namespace        = try(kubernetes_namespace_v1.jenkins[0].metadata[0].name, local.jenkins_namespace)
+  create_namespace = false
+  chart            = var.jenkins_name
+  version          = var.jenkins_chart_version
+  repository       = "https://charts.jenkins.io"
+  values           = ["${file("${path.module}/helm-values/jenkins-values.yaml")}"]
   set {
-    name = "controller.admin.password"
+    name  = "controller.admin.password"
     value = data.aws_secretsmanager_secret_version.jenkins_admin_password_version.secret_string
   }
-  set { 
-    name = "persistence.existingClaim"
+  set {
+    name  = "persistence.existingClaim"
     value = local.jenkins_ebs_pvc
   }
 
 }
 
 resource "kubernetes_namespace_v1" "jenkins" {
-  count = var.enable_jenkins  ? 1 : 0
+  count = var.enable_jenkins ? 1 : 0
   metadata {
     name = local.jenkins_namespace
   }

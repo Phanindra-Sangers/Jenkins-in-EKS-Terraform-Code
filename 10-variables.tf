@@ -43,7 +43,21 @@ variable "eks_cluster_version" {
 variable "access_entries" {
   description = "Map of access entries to add to the cluster"
   type        = any
-  default     = {}
+  default     =  { 
+    training = {
+      kubernetes_groups = []
+      principal_arn     = "arn:aws:iam::954503069243:user/internal-training"
+
+      policy_associations = {
+        single = {
+          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+          access_scope = {
+            type       = "cluster"
+          }
+        }
+      }
+    }
+}
 }
 variable "cluster_endpoint_public_access" {
 
@@ -104,6 +118,7 @@ variable "vpc_cidr" {
 }
 variable "create_igw" {
   type = bool
+  default = true 
 }
 variable "create_db_subnet_group" {
 
@@ -138,10 +153,10 @@ variable "enable_dns_hosts" {
 
 # --------------- EKS Addons ----------
 
-variable "enable_load_balancer_controller" { 
+variable "enable_load_balancer_controller" {
 
-    type = bool 
-    default = true 
+  type    = bool
+  default = true
 }
 
 
@@ -167,7 +182,7 @@ variable "jenkins_chart_version" {
 variable "enable_jenkins" {
 
   type    = bool
-  default = true  
+  default = true
 
 }
 

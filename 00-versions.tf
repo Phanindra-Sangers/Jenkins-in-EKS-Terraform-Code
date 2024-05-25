@@ -25,7 +25,7 @@ terraform {
       version = "3.6.0"
     }
     postgresql = {
-      source = "SemMulder/postgresql"
+      source  = "SemMulder/postgresql"
       version = "0.0.6-pre"
     }
 

@@ -11,7 +11,7 @@ locals {
     Managedby    = "Terraform"
   }
 
-   enkins_namespace         = "jenkins"
+  jenkins_namespace         = "jenkins"
   jenkins_ebs_storage_class = "ebs-sc"
   jenkins_ebs_pvc           = "ebs-pvc"
 }

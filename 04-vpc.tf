@@ -14,14 +14,14 @@ module "vpc" {
   single_nat_gateway                 = var.single_nat_gw
   enable_dns_hostnames               = var.enable_dns_hosts
   create_igw                         = var.create_igw
-  
+
   public_subnet_tags = {
-    "kubernetes.io/role/elb"                                                         = 1
+    "kubernetes.io/role/elb"                                               = 1
     "kubernetes.io/cluster/${format("%s-%s", local.prefix, local.suffix)}" = "owned"
   }
 
   private_subnet_tags = {
-    "kubernetes.io/role/internal-elb"                                                = 1
+    "kubernetes.io/role/internal-elb"                                      = 1
     "kubernetes.io/cluster/${format("%s-%s", local.prefix, local.suffix)}" = "owned"
   }
 
