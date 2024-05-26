@@ -33,7 +33,11 @@ module "eks" {
       most_recent = true
     }
 
-    eks
+    eks-pod-identity-agent = { 
+
+      preserve = true 
+      most_recent = true 
+    }
 
   }
 

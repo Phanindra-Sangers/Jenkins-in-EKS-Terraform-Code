@@ -1,0 +1,56 @@
+podTemplate(yaml: '''
+    apiVersion: v1
+    kind: Pod
+    spec:
+      serviceAccountName: jenkins
+      containers:
+      - name: kaniko
+        image: gcr.io/kaniko-project/executor:debug
+        command:
+        - sleep
+        args:
+        - 9999999
+        env:
+         - name: "AWS_SDK_LOAD_CONFIG"
+           value: "true"
+         - name: AWS_EC2_METADATA_DISABLED
+           value: "true"
+      - name: kubectl
+        image: amazon/aws-cli:latest
+        command:
+        - sleep
+        args:
+        - 9999999
+        
+      restartPolicy: Never
+     
+''') {
+  node(POD_LABEL) {
+    stage('Get a Python project from github') {
+      git url: 'https://github.com/Phanindra-Sangers/Jenkins-in-EKS-Terraform-Code/', branch: 'main' 
+    
+      container('kaniko') {
+        stage('Build a Python project') {
+          sh '''
+            cd source-code
+            /kaniko/executor --context `pwd` --destination=your-repo-uri:latest
+          '''
+        }
+      }
+      container('kubectl') {
+        stage('Deploy Python Flask Image to Kubernetes') {
+          sh '''
+               cd manifests/
+               curl -LO "https://dl.k8s.io/release/v1.29.0/bin/linux/amd64/kubectl" 
+               chmod +x kubectl
+               ./kubectl version --client
+               aws --version
+               aws sts get-caller-identity
+               pwd
+               ls
+               ./kubectl apply -f . 
+          '''
+        }
+      }
+    }
+}}
